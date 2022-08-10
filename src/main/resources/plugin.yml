@@ -1,0 +1,31 @@
+name: OrderBook
+version: '${project.version}'
+main: orderbook.orderbook.OrderBook
+api-version: 1.19
+prefix: OrderBook
+authors: [ EminentMass ]
+description: Item to item order book for trading.
+website: N/A
+commands:
+  orderbook:
+    description: Place an item up for trade in the order book.
+    usage: /orderbook <sell item> <sell count> <buy item> <buy count>
+    aliases: ob
+  orderbookremove:
+    description: Remove a previously placed order.
+    usage: /orderbookremove <order id>
+    aliases: obr
+  orderbookmatch:
+    description: Trade with another order by id
+    usage: /orderbookmatch <order id>
+    aliases: obm
+  orderbookcollect:
+    description: Collect items from completed trades
+    usage: /orderbookcollect <order id>
+    aliases: obc
+  orderbooklist:
+    description: List all open trades
+    usage: /orderbooklist [buy item] [count]
+    aliases: obl
+
+
