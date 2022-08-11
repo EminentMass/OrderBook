@@ -1,6 +1,7 @@
 package orderbook.orderbook;
 
 import com.google.common.collect.*;
+import orderbook.orderbook.log.OrderBookMutation;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -168,8 +169,12 @@ public class OrderManager {
 
         // remove trades from open trades so no one tries to match with these two orders.
         openTrades.remove(orders.get(id1), id1);
-
         openTrades.remove(orders.get(id1), id2);
+
+        // Log change of Order state
+        assert OrderBook.getInstance() != null;
+        assert OrderBook.getInstance().getOrderLogger() != null;
+        OrderBook.getInstance().getOrderLogger().logOrderBookMutation(OrderBookMutation.match(id1, order.getSellItem(), order.getBuyItem(), id2));
 
         return true;
     }

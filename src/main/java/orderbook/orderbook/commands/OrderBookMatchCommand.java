@@ -1,7 +1,6 @@
 package orderbook.orderbook.commands;
 
 import orderbook.orderbook.*;
-import orderbook.orderbook.log.OrderBookMutation;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -52,10 +51,6 @@ public class OrderBookMatchCommand extends AbstractIdOrderBookCommand {
         TradeInventoryManager.addBookSet(newMatchOrder, inventory);
 
         sender.sendMessage(newMatchOrder.chatPostDisplay());
-
-        assert OrderBook.getInstance() != null;
-        assert OrderBook.getInstance().getOrderLogger() != null;
-        OrderBook.getInstance().getOrderLogger().logOrderBookMutation(OrderBookMutation.match(newMatchOrder.getId(), newMatchOrder.getSellItem(), newMatchOrder.getBuyItem(), order.getId()));
 
         return true;
     }
