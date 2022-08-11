@@ -50,18 +50,10 @@ public class OrderAdapter extends TypeAdapter<Order> {
         while(reader.hasNext()) {
             String name = reader.nextName();
             switch (name) {
-                case OrderIdName:
-                    id = UUID.fromString(reader.nextString());
-                    break;
-                case OrderStageName:
-                    stage = new OrderStageAdapter().read(reader);
-                    break;
-                case OrderTradeName:
-                    trade = new TradeAdapter().read(reader);
-                    break;
-                default:
-                    reader.skipValue();
-                    break;
+                case OrderIdName -> id = UUID.fromString(reader.nextString());
+                case OrderStageName -> stage = new OrderStageAdapter().read(reader);
+                case OrderTradeName -> trade = new TradeAdapter().read(reader);
+                default -> reader.skipValue();
             }
         }
         reader.endObject();

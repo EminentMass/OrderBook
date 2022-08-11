@@ -39,11 +39,9 @@ public class OrderBookInteractEvent implements Listener {
 
         ItemMeta meta = item.getItemMeta();
 
-        if (!(meta instanceof BookMeta)) {
+        if (!(meta instanceof BookMeta bMeta)) {
             return;
         }
-
-        BookMeta bMeta = (BookMeta) meta;
 
         List<Component> lore = bMeta.lore();
 
@@ -59,11 +57,9 @@ public class OrderBookInteractEvent implements Listener {
 
         Object v = hv.value();
 
-        if(!(v instanceof TextComponent)) {
+        if(!(v instanceof TextComponent hoverValue)) {
             return;
         }
-
-        TextComponent hoverValue = (TextComponent) v;
 
         String idString = hoverValue.content();
 

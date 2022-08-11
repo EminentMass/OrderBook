@@ -39,12 +39,10 @@ public abstract class AbstractOrderBookCommand implements TabExecutor {
 
     @Override
     public final boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if( !(sender instanceof Player) ){
+        if( !(sender instanceof Player player) ){
             sender.sendMessage("Only players can use this command.");
             return true;
         }
-
-        Player player = (Player) sender;
 
         return onPlayerCommand(sender ,player, command, label, args);
     }

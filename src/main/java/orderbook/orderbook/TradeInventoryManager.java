@@ -11,7 +11,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.BookMeta;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -118,7 +117,7 @@ public class TradeInventoryManager {
 
         ItemStack[] contents = inventory.getContents();
 
-        List<ItemStack> toRemove = Arrays.stream(contents).filter(i -> stampedWith(i, stamp)).collect(Collectors.toList());
+        List<ItemStack> toRemove = Arrays.stream(contents).filter(i -> stampedWith(i, stamp)).toList();
 
         for (ItemStack book : toRemove) {
             inventory.removeItemAnySlot(book);
