@@ -133,21 +133,31 @@ public class OrderManager {
 
     @SuppressWarnings("UnusedReturnValue")
     private boolean matchOrder(UUID orderId) {
-        Order order = orders.get(orderId);
+        Order order1 = orders.get(orderId);
 
-        if(!order.getStage().isPosted()){
+        if(!order1.getStage().isPosted()){
             return false;
         }
 
         // get list of opposite trades
-        List<UUID> matches = openTrades.get(order.getTrade().getInverse());
+        List<UUID> matches = openTrades.get(order1.getTrade().getInverse());
 
         if(matches.size() == 0) {
             return false;
         }
 
-        UUID id1 = order.getId();
+        UUID id1 = order1.getId();
         UUID id2 = matches.iterator().next();
+
+        Order order2 = orders.get(id2);
+
+        if(!order2.getStage().isPosted()){
+            openTrades.remove(order2.getTrade(), id2);
+            assert OrderBook.getInstance() != null;
+            OrderBook.getInstance().getLogger().warning(format("Order %s was in error state. It was in open trades while not Posted", id2));
+            return false;
+        }
+
 
         // both orders should only be pointed to by openTrades if they are posted and yet to be matched or completed.
         boolean success     = orders.get(id1).setMatched(id2);
@@ -170,7 +180,7 @@ public class OrderManager {
         // Log change of Order state
         assert OrderBook.getInstance() != null;
         assert OrderBook.getInstance().getOrderLogger() != null;
-        OrderBook.getInstance().getOrderLogger().logOrderBookMutation(OrderBookMutation.match(id1, order.getSellItem(), order.getBuyItem(), id2));
+        OrderBook.getInstance().getOrderLogger().logOrderBookMutation(OrderBookMutation.match(id1, order1.getSellItem(), order1.getBuyItem(), id2));
 
         return true;
     }
