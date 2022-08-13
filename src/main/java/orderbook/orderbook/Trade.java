@@ -13,13 +13,12 @@ public class Trade {
         sellItem = sell;
         buyItem = buy;
     }
-
     public Trade(Order order) {
         sellItem = order.getSellItem();
         buyItem = order.getBuyItem();
     }
 
-    public Trade getInverseTrade() {
+    public Trade getInverse() {
         return new Trade(buyItem, sellItem);
     }
 

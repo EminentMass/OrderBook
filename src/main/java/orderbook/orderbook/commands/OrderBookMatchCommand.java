@@ -35,7 +35,7 @@ public class OrderBookMatchCommand extends AbstractIdOrderBookCommand {
         }
 
         // trade that will match
-        Trade trade = order.getInverseTrade();
+        Trade trade = order.getTrade().getInverse();
 
         // No need to check inventory requirements as they would be the same as the matched order
 

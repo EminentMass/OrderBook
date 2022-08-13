@@ -12,10 +12,11 @@ import java.util.*;
 
 import static java.lang.String.format;
 
-public class Order extends Trade {
+public class Order {
 
     private final UUID id;
     private final OrderStage stage;
+    private final Trade trade;
 
     private static final TextColor idColor = NamedTextColor.DARK_PURPLE;
     private static final TextColor itemNameColor = NamedTextColor.GRAY;
@@ -29,7 +30,7 @@ public class Order extends Trade {
     }
 
     public Order(UUID uniqueId, OrderStage orderStage, Trade orderTrade) {
-        super(orderTrade.getSellItem(), orderTrade.getBuyItem());
+        trade = new Trade(orderTrade.getSellItem(), orderTrade.getBuyItem());
         id = uniqueId;
         stage = orderStage;
     }
@@ -97,6 +98,16 @@ public class Order extends Trade {
 
     public UUID getId() { return id; }
     public OrderStage getStage() { return stage; }
+    public Trade getTrade() {
+        return trade;
+    }
+
+    public ItemStack getSellItem() {
+        return trade.getSellItem();
+    }
+    public ItemStack getBuyItem() {
+        return trade.getBuyItem();
+    }
 
     @Override
     public boolean equals(Object o) {

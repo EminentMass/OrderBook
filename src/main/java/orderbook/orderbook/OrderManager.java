@@ -79,8 +79,7 @@ public class OrderManager {
             return false;
         }
 
-        // cast to trade
-        openTrades.remove(order, id);
+        openTrades.remove(order.getTrade(), id);
 
         return true;
     }
@@ -144,7 +143,7 @@ public class OrderManager {
         }
 
         // get list of opposite trades
-        List<UUID> matches = openTrades.get(order.getInverseTrade());
+        List<UUID> matches = openTrades.get(order.getTrade().getInverse());
 
         if(matches.size() == 0) {
             return false;
@@ -168,8 +167,8 @@ public class OrderManager {
         }
 
         // remove trades from open trades so no one tries to match with these two orders.
-        openTrades.remove(orders.get(id1), id1);
-        openTrades.remove(orders.get(id1), id2);
+        openTrades.remove(orders.get(id1).getTrade(), id1);
+        openTrades.remove(orders.get(id1).getTrade(), id2);
 
         // Log change of Order state
         assert OrderBook.getInstance() != null;

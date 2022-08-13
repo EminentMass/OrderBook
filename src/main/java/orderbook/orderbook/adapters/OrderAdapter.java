@@ -30,7 +30,7 @@ public class OrderAdapter extends TypeAdapter<Order> {
         writer.name(OrderStageName);
         new OrderStageAdapter().write(writer, value.getStage());
         writer.name(OrderTradeName);
-        new TradeAdapter().write(writer, value); // cast value to trade
+        new TradeAdapter().write(writer, value.getTrade()); // cast value to trade
         writer.endObject();
     }
 

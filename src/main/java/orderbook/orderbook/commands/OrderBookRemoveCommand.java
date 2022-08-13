@@ -47,7 +47,7 @@ public class OrderBookRemoveCommand extends AbstractIdOrderBookCommand {
 
         TradeInventoryManager.giveSellItems(order, inventory);
 
-        if( orderManager.removeOrder(id) ){
+        if( !orderManager.removeOrder(id) ){
             assert OrderBook.getInstance() != null;
             OrderBook.getInstance().getLogger().warning("Somehow failed to remove order after checking it was there");
         }

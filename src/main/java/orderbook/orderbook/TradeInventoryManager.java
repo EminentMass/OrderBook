@@ -28,7 +28,7 @@ public class TradeInventoryManager {
 
         List<ItemStack> books = new ArrayList<>();
 
-        int bookCount = order.inventoryRequirement();
+        int bookCount = order.getTrade().inventoryRequirement();
         for(int i=1;i<=bookCount;i++) {
             ItemStack bookBase = new ItemStack(Material.WRITTEN_BOOK);
             BookMeta bookMeta = (BookMeta) bookBase.getItemMeta();
@@ -75,7 +75,7 @@ public class TradeInventoryManager {
         List<Component> stamp = bookStamp(order);
 
         return Arrays.stream(inventory.getContents()).filter(i -> stampedWith(i, stamp))
-                .count() == order.inventoryRequirement();
+                .count() == order.getTrade().inventoryRequirement();
     }
 
     private static boolean stampedWith(ItemStack item, List<Component> stamp) {
