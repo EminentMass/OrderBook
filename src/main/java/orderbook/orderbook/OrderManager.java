@@ -120,13 +120,9 @@ public class OrderManager {
         Order order = new Order(trade);
 
         orders.put(order.getId(), order);
-
-        // No need to add trade to open trades if the order is immediately matched.
-        if(matchOrder(order.getId())) {
-            return order;
-        }
-
         openTrades.put(trade, order.getId());
+
+        matchOrder(order.getId());
 
         return order;
     }
@@ -135,6 +131,7 @@ public class OrderManager {
         orders.keySet().forEach(this::matchOrder);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     private boolean matchOrder(UUID orderId) {
         Order order = orders.get(orderId);
 
@@ -168,7 +165,7 @@ public class OrderManager {
 
         // remove trades from open trades so no one tries to match with these two orders.
         openTrades.remove(orders.get(id1).getTrade(), id1);
-        openTrades.remove(orders.get(id1).getTrade(), id2);
+        openTrades.remove(orders.get(id2).getTrade(), id2);
 
         // Log change of Order state
         assert OrderBook.getInstance() != null;
