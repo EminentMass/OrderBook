@@ -2,9 +2,7 @@ package orderbook.orderbook;
 
 import orderbook.orderbook.commands.*;
 import orderbook.orderbook.events.OrderBookInteractEvent;
-import orderbook.orderbook.log.OrderLogger;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -13,7 +11,6 @@ public final class OrderBook extends JavaPlugin {
 
     private static OrderBook instance;
     private static OrderManager orderManager;
-    private static OrderLogger orderLogger;
 
     @Override
     public void onEnable() {
@@ -33,13 +30,6 @@ public final class OrderBook extends JavaPlugin {
             getLogger().warning(e.getMessage());
             orderManager = new OrderManager();
         }
-
-        try {
-            orderLogger = new OrderLogger();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
 
         // Register commands
         Objects.requireNonNull(getCommand("orderbook")).setExecutor(new OrderBookCommand(this.getOrderManager()));
@@ -66,28 +56,18 @@ public final class OrderBook extends JavaPlugin {
             getLogger().warning(e.getMessage());
         }
 
-        try {
-            orderLogger.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        orderLogger = null;
         orderManager = null;
         instance = null;
 
         getLogger().info("Disabled");
     }
 
-    public static @Nullable OrderBook getInstance() {
+    public static OrderBook getInstance() {
         return instance;
     }
 
-    public @Nullable OrderManager getOrderManager() {
+    public OrderManager getOrderManager() {
         return orderManager;
-    }
-
-    public @Nullable OrderLogger getOrderLogger() {
-        return orderLogger;
     }
 
 }

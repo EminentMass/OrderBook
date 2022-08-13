@@ -1,7 +1,7 @@
 package orderbook.orderbook.commands;
 
 import orderbook.orderbook.*;
-import orderbook.orderbook.log.OrderBookMutation;
+import orderbook.orderbook.log.OrderLogger;
 import orderbook.orderbook.parameters.ItemParameter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -67,9 +67,7 @@ public class OrderBookCommand extends AbstractOrderBookCommand {
 
         sender.sendMessage(order.chatPostDisplay());
 
-        assert OrderBook.getInstance() != null;
-        assert OrderBook.getInstance().getOrderLogger() != null;
-        OrderBook.getInstance().getOrderLogger().logOrderBookMutation(OrderBookMutation.post(order.getId(), order.getSellItem(), order.getBuyItem(), player.getName()));
+        OrderLogger.logPost(player.getName(), order.getSellItem(), order.getBuyItem(), order.getId());
 
         return true;
     }

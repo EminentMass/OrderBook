@@ -35,6 +35,7 @@ public class Order {
         stage = orderStage;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public boolean setMatched(UUID id) {
         return stage.setMatched(id);
     }

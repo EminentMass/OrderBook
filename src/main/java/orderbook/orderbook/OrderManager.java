@@ -1,7 +1,7 @@
 package orderbook.orderbook;
 
 import com.google.common.collect.*;
-import orderbook.orderbook.log.OrderBookMutation;
+import orderbook.orderbook.log.OrderLogger;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -153,34 +153,21 @@ public class OrderManager {
 
         if(!order2.getStage().isPosted()){
             openTrades.remove(order2.getTrade(), id2);
-            assert OrderBook.getInstance() != null;
-            OrderBook.getInstance().getLogger().warning(format("Order %s was in error state. It was in open trades while not Posted", id2));
+            OrderLogger.warnInvalidState(format("Order %s was in openTrades when not posted", id2));
             return false;
         }
 
 
         // both orders should only be pointed to by openTrades if they are posted and yet to be matched or completed.
-        boolean success     = orders.get(id1).setMatched(id2);
-        success            &= orders.get(id2).setMatched(id1);
-
-        if(!success) {
-            assert OrderBook.getInstance() != null;
-            OrderBook.getInstance().getLogger().warning(format(
-                    "Failed matching orders %s %s possible half match current states are %s %s",
-                    id1, id2,
-                    orders.get(id1).getStage().getStep().toString(),
-                    orders.get(id2).getStage().getStep().toString()
-            ));
-        }
+        orders.get(id1).setMatched(id2);
+        orders.get(id2).setMatched(id1);
 
         // remove trades from open trades so no one tries to match with these two orders.
         openTrades.remove(orders.get(id1).getTrade(), id1);
         openTrades.remove(orders.get(id2).getTrade(), id2);
 
         // Log change of Order state
-        assert OrderBook.getInstance() != null;
-        assert OrderBook.getInstance().getOrderLogger() != null;
-        OrderBook.getInstance().getOrderLogger().logOrderBookMutation(OrderBookMutation.match(id1, order1.getSellItem(), order1.getBuyItem(), id2));
+        OrderLogger.logMatch(order1.getSellItem(), order1.getBuyItem(), id1, id2);
 
         return true;
     }

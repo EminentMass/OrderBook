@@ -4,7 +4,7 @@ import orderbook.orderbook.Order;
 import orderbook.orderbook.OrderBook;
 import orderbook.orderbook.OrderManager;
 import orderbook.orderbook.TradeInventoryManager;
-import orderbook.orderbook.log.OrderBookMutation;
+import orderbook.orderbook.log.OrderLogger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -52,9 +52,7 @@ public class OrderBookRemoveCommand extends AbstractIdOrderBookCommand {
             OrderBook.getInstance().getLogger().warning("Somehow failed to remove order after checking it was there");
         }
 
-        assert OrderBook.getInstance() != null;
-        assert OrderBook.getInstance().getOrderLogger() != null;
-        OrderBook.getInstance().getOrderLogger().logOrderBookMutation(OrderBookMutation.remove(order.getId(), order.getSellItem(), order.getBuyItem(), player.getName()));
+        OrderLogger.logRemove(player.getName(), order.getSellItem(), order.getBuyItem(), order.getId());
 
         return true;
     }
