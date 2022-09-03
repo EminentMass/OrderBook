@@ -13,15 +13,15 @@ class OrderBook : JavaPlugin() {
         // If this failed we initialize an empty one
         // Later saves will override and orders that were left in the save file
         try {
-            orderManager = loadOrderManager()
+            orderManager = loadOrderManager(this)
             logger.info("Orders loaded")
         } catch (e: IOException) {
             e.printStackTrace()
             logger.warning("Failed to load order book state. Possible loss of floating orders")
-            orderManager = OrderManager()
+            orderManager = OrderManager(this)
         } catch (e: Exception) {
             logger.warning(e.message)
-            orderManager = OrderManager()
+            orderManager = OrderManager(this)
         }
 
         // Register commands

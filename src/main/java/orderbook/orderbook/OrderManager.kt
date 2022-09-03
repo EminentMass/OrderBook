@@ -46,13 +46,10 @@ class Saver(private var plugin: OrderBook, private var lastSaveHash: Int = 0) : 
             manager.save()
             lastSaveHash = manager.hashCode()
         } catch (e: Exception) {
-            e.printStackTrace()
             val logger = plugin.logger
+            e.printStackTrace()
             logger.warning(e.message)
-            logger.warning("Failed to save order book state. Save attempt scheduled in 10 seconds")
-
-            // Possibly not blocked in 10 seconds
-            this.runTaskLater(plugin, (10 * 20).toLong())
+            logger.warning("Failed to save order book state.")
         }
     }
 }

@@ -35,13 +35,13 @@ fun OrderManager.save() {
 
     // Type is an array of Order
     val tt = object : TypeToken<Array<Order?>?>() {}.type
-    gson.toJson(getOrders(), tt, writer)
+    gson.toJson(ArrayList(getOrders()), tt, writer)
     writer.flush()
     writer.close()
 }
 
 @Throws(Exception::class)
-fun loadOrderManager(): OrderManager {
+fun loadOrderManager(plugin: OrderBook): OrderManager {
     val gson = gson()
     val file = saveFile()
     if (!file.exists()) {
@@ -50,7 +50,7 @@ fun loadOrderManager(): OrderManager {
     val reader: Reader = FileReader(file)
     val ordersArray = gson.fromJson(reader, Array<Order>::class.java)
         ?: throw Exception("Failed to load order book null from reader")
-    return OrderManager(ordersArray.toList())
+    return OrderManager(plugin, ordersArray.toList())
 }
 
 private fun saveFile(): File {
