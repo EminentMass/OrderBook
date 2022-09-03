@@ -35,7 +35,7 @@ private class OrderLookupTable(private var table: MutableMap<Trade, MutableList<
     fun getInverse(key: Trade): MutableList<UUID>? = get(key.inverse)
 }
 
-class Saver(private var plugin: OrderBook, private var lastSaveHash: Int = 0) : BukkitRunnable() {
+class Saver(private val plugin: OrderBook, private var lastSaveHash: Int = 0) : BukkitRunnable() {
     override fun run() {
 
         // only save if the state has changed
@@ -54,7 +54,7 @@ class Saver(private var plugin: OrderBook, private var lastSaveHash: Int = 0) : 
     }
 }
 
-class OrderManager(plugin: OrderBook, list: List<Order> = emptyList()) {
+class OrderManager(val plugin: OrderBook, list: List<Order> = emptyList()) {
     private val orders: MutableMap<UUID, Order>
     private val openTrades: OrderLookupTable
     private val saver: Saver
@@ -112,7 +112,7 @@ class OrderManager(plugin: OrderBook, list: List<Order> = emptyList()) {
         val order2 = orders[id2]
         if (!order2!!.stage.isPosted) {
             openTrades.remove(order2.trade, id2)
-            warnInvalidState(String.format("Order %s was in openTrades when not posted", id2))
+            plugin.logger.warnInvalidState(String.format("Order %s was in openTrades when not posted", id2))
             return false
         }
 
@@ -124,7 +124,7 @@ class OrderManager(plugin: OrderBook, list: List<Order> = emptyList()) {
         openTrades.remove(orders[id2]!!.trade, id2)
 
         // Log change of Order state
-        logMatch(order1.sellItem, order1.buyItem, id1, id2)
+        plugin.logger.logMatch(order1.sellItem, order1.buyItem, id1, id2)
         return true
     }
 

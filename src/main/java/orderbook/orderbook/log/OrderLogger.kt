@@ -1,10 +1,10 @@
 package orderbook.orderbook.log
 
-import orderbook.orderbook.OrderBook
 import org.bukkit.inventory.ItemStack
 import java.util.*
+import java.util.logging.Logger
 
-fun logPost(playerName: String?, sellItem: ItemStack, buyItem: ItemStack, id: UUID) {
+fun Logger.logPost(playerName: String?, sellItem: ItemStack, buyItem: ItemStack, id: UUID) {
     val msg = String.format(
         "%s posted %s for %s id %s",
         playerName,
@@ -15,7 +15,7 @@ fun logPost(playerName: String?, sellItem: ItemStack, buyItem: ItemStack, id: UU
     logBase(msg)
 }
 
-fun logMatch(sellItem: ItemStack, buyItem: ItemStack, id1: UUID, id2: UUID) {
+fun Logger.logMatch(sellItem: ItemStack, buyItem: ItemStack, id1: UUID, id2: UUID) {
     val msg = String.format(
         "Matched trade of %s for %s id's %s and %s",
         sellItem.toString(),
@@ -26,7 +26,7 @@ fun logMatch(sellItem: ItemStack, buyItem: ItemStack, id1: UUID, id2: UUID) {
     logBase(msg)
 }
 
-fun logComplete(playerName: String?, sellItem: ItemStack, buyItem: ItemStack, id: UUID) {
+fun Logger.logComplete(playerName: String?, sellItem: ItemStack, buyItem: ItemStack, id: UUID) {
     val msg = String.format(
         "%s completed %s for %s id %s",
         playerName,
@@ -37,7 +37,7 @@ fun logComplete(playerName: String?, sellItem: ItemStack, buyItem: ItemStack, id
     logBase(msg)
 }
 
-fun logRemove(playerName: String?, sellItem: ItemStack, buyItem: ItemStack, id: UUID) {
+fun Logger.logRemove(playerName: String?, sellItem: ItemStack, buyItem: ItemStack, id: UUID) {
     val msg = String.format(
         "%s removed %s for %s id %s",
         playerName,
@@ -48,12 +48,10 @@ fun logRemove(playerName: String?, sellItem: ItemStack, buyItem: ItemStack, id: 
     logBase(msg)
 }
 
-fun warnInvalidState(msg: String) {
-    OrderBook.instance?.logger?.warning("> Invalid State: $msg") ?:
-    throw Exception("OrderBook can't access logger")
+fun Logger.warnInvalidState(msg: String) {
+    warning("> Invalid State: $msg")
 }
 
-private fun logBase(msg: String) {
-    OrderBook.instance?.logger?.info("> State Change: $msg") ?:
-    throw Exception("OrderBook can't access logger")
+private fun Logger.logBase(msg: String) {
+    info("> State Change: $msg")
 }

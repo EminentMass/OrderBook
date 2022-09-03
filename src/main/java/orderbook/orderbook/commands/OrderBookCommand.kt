@@ -11,7 +11,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
 
-class OrderBookCommand(om: OrderManager) : AbstractOrderBookCommand(om) {
+class OrderBookCommand(plugin: OrderBook) : AbstractOrderBookCommand(plugin) {
     override fun onPlayerCommand(
         sender: CommandSender,
         player: Player,
@@ -45,11 +45,11 @@ class OrderBookCommand(om: OrderManager) : AbstractOrderBookCommand(om) {
             sender.sendMessage("Unable to create order you do not have the required sell items")
             return true
         }
-        val order: Order = orderManager.postOrder(trade)
+        val order: Order = plugin.orderManager?.postOrder(trade) ?: return false
         inventory takeSellItems trade
         inventory addBookSet order
         sender.sendMessage(order.chatPostDisplay())
-        logPost(player.name, order.sellItem, order.buyItem, order.id)
+        plugin.logger.logPost(player.name, order.sellItem, order.buyItem, order.id)
         return true
     }
 

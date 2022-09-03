@@ -3,7 +3,6 @@ package orderbook.orderbook
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import orderbook.orderbook.OrderBook.Companion.instance
 import orderbook.orderbook.adapters.ItemStackAdapter
 import orderbook.orderbook.adapters.OrderAdapter
 import orderbook.orderbook.adapters.OrderStageAdapter
@@ -21,7 +20,7 @@ fun OrderManager.save() {
 
     // set up writers and handle if file isn't there
     val gson = gson()
-    val file = saveFile()
+    val file = saveFile(plugin)
 
     val dirExists = file.parentFile.exists() || file.parentFile.mkdir()
     if (!dirExists) {
@@ -43,7 +42,7 @@ fun OrderManager.save() {
 @Throws(Exception::class)
 fun loadOrderManager(plugin: OrderBook): OrderManager {
     val gson = gson()
-    val file = saveFile()
+    val file = saveFile(plugin)
     if (!file.exists()) {
         throw Exception("Failed to load order book from file possible loss of floating orders or is this the first execution.")
     }
@@ -53,8 +52,8 @@ fun loadOrderManager(plugin: OrderBook): OrderManager {
     return OrderManager(plugin, ordersArray.toList())
 }
 
-private fun saveFile(): File {
-    return File(instance?.dataFolder?.absolutePath + "/order.json")
+private fun saveFile(plugin: OrderBook): File {
+    return File(plugin.dataFolder.absolutePath + "/order.json")
 }
 
 private fun gson(): Gson {

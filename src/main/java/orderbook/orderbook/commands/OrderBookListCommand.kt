@@ -2,7 +2,7 @@ package orderbook.orderbook.commands
 
 import net.kyori.adventure.text.Component
 import orderbook.orderbook.Order
-import orderbook.orderbook.OrderManager
+import orderbook.orderbook.OrderBook
 import orderbook.orderbook.parameters.parsers.parseSendItem
 import orderbook.orderbook.parameters.parsers.parseSendUnsignedInteger
 import org.bukkit.command.Command
@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
-class OrderBookListCommand(om: OrderManager) : AbstractOrderBookCommand(om) {
+class OrderBookListCommand(plugin: OrderBook) : AbstractOrderBookCommand(plugin) {
     override fun onPlayerCommand(
         sender: CommandSender,
         player: Player,
@@ -31,7 +31,7 @@ class OrderBookListCommand(om: OrderManager) : AbstractOrderBookCommand(om) {
                 searchOrders(param.toItemStack(inventory, count))
             }
             else -> return false
-        }
+        } ?: emptyList()
         val bar = "-------------------------"
         val header: Component = Component.text("$bar\nOrderList\n$bar")
 
@@ -55,13 +55,13 @@ class OrderBookListCommand(om: OrderManager) : AbstractOrderBookCommand(om) {
         }
     }
 
-    private fun searchOrders(): List<Component> = orderManager.getActiveOrders().map { obj: Order -> obj.chatListDisplay() }
+    private fun searchOrders(): List<Component>? = plugin.orderManager?.getActiveOrders()?.map { obj: Order -> obj.chatListDisplay() }
 
-    private fun searchOrders(item: ItemStack): List<Component> {
+    private fun searchOrders(item: ItemStack): List<Component>? {
         val mat = item.type
         val count = item.amount
-        return orderManager.getActiveOrders()
-            .filter {o -> o.sellItem.type === mat && o.sellItem.amount >= count }
-            .map { obj: Order -> obj.chatListDisplay() }
+        return plugin.orderManager?.getActiveOrders()
+            ?.filter {o -> o.sellItem.type === mat && o.sellItem.amount >= count }
+            ?.map { obj: Order -> obj.chatListDisplay() }
     }
 }

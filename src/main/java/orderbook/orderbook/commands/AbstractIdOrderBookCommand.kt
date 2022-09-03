@@ -1,12 +1,12 @@
 package orderbook.orderbook.commands
 
-import orderbook.orderbook.OrderManager
+import orderbook.orderbook.OrderBook
 import orderbook.orderbook.parameters.parsers.parseSendUUID
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import java.util.*
 
-abstract class AbstractIdOrderBookCommand(om: OrderManager) : AbstractOrderBookCommand(om) {
+abstract class AbstractIdOrderBookCommand(plugin: OrderBook) : AbstractOrderBookCommand(plugin) {
     override fun onTabComplete(
         sender: CommandSender,
         command: Command,

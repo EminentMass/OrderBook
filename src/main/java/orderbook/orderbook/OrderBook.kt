@@ -7,7 +7,6 @@ import java.io.IOException
 
 class OrderBook : JavaPlugin() {
     override fun onEnable() {
-        instance = this
 
         // Load order manager from previously saved state
         // If this failed we initialize an empty one
@@ -25,11 +24,11 @@ class OrderBook : JavaPlugin() {
         }
 
         // Register commands
-        getCommand("orderbook")?.setExecutor(OrderBookCommand(orderManager!!))
-        getCommand("orderbookremove")?.setExecutor(OrderBookRemoveCommand(orderManager!!))
-        getCommand("orderbookmatch")?.setExecutor(OrderBookMatchCommand(orderManager!!))
-        getCommand("orderbookcollect")?.setExecutor(OrderBookCollectCommand(orderManager!!))
-        getCommand("orderbooklist")?.setExecutor(OrderBookListCommand(orderManager!!))
+        getCommand("orderbook")?.setExecutor(OrderBookCommand(this))
+        getCommand("orderbookremove")?.setExecutor(OrderBookRemoveCommand(this))
+        getCommand("orderbookmatch")?.setExecutor(OrderBookMatchCommand(this))
+        getCommand("orderbookcollect")?.setExecutor(OrderBookCollectCommand(this))
+        getCommand("orderbooklist")?.setExecutor(OrderBookListCommand(this))
 
         // call orderbookcollect when punching with an order book
         server.pluginManager.registerEvents(OrderBookInteractEvent(), this)
@@ -47,17 +46,9 @@ class OrderBook : JavaPlugin() {
             logger.warning(e.message)
         }
         orderManager = null
-        instance = null
         logger.info("Disabled")
     }
 
     var orderManager: OrderManager? = null
         private set
-
-    // TODO: remove so that we use no global getters.
-    companion object {
-        @JvmStatic
-        var instance: OrderBook? = null
-            private set
-    }
 }

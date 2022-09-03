@@ -1,16 +1,12 @@
 package orderbook.orderbook.commands
 
-import orderbook.orderbook.OrderBook.Companion.instance
-import orderbook.orderbook.OrderManager
-import orderbook.orderbook.giveBuyItems
-import orderbook.orderbook.hasBookSet
+import orderbook.orderbook.*
 import orderbook.orderbook.log.logComplete
-import orderbook.orderbook.takeBookSet
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class OrderBookCollectCommand(om: OrderManager) : AbstractIdOrderBookCommand(om) {
+class OrderBookCollectCommand(plugin: OrderBook) : AbstractIdOrderBookCommand(plugin) {
     override fun onPlayerCommand(
         sender: CommandSender,
         player: Player,
@@ -20,7 +16,7 @@ class OrderBookCollectCommand(om: OrderManager) : AbstractIdOrderBookCommand(om)
     ): Boolean {
         val id = parseArgs(args, sender) ?: return true
         val inventory = player.inventory
-        val order = orderManager.getOrder(id)
+        val order = plugin.orderManager?.getOrder(id)
         order ?: run {
             sender.sendMessage("Unable to find order ", id.toString())
             return true
@@ -37,10 +33,9 @@ class OrderBookCollectCommand(om: OrderManager) : AbstractIdOrderBookCommand(om)
         }
         inventory takeBookSet order
         inventory giveBuyItems order
-        if (!order.setCompleted()) {
-            instance!!.logger.warning("Somehow failed to set order to completed even after checking the stage")
-        }
-        logComplete(player.name, order.sellItem, order.buyItem, order.id)
+        order.setCompleted()
+
+        plugin.logger.logComplete(player.name, order.sellItem, order.buyItem, order.id)
         return true
     }
 }

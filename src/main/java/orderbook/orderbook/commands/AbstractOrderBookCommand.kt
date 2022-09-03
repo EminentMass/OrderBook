@@ -1,6 +1,6 @@
 package orderbook.orderbook.commands
 
-import orderbook.orderbook.OrderManager
+import orderbook.orderbook.OrderBook
 import orderbook.orderbook.parameters.values.ItemSpecial
 import org.bukkit.Material
 import org.bukkit.command.Command
@@ -15,7 +15,7 @@ private val itemTabCompletions: List<String> = Material.values()
 
 private val numberTabCompletions: List<String> = (0..10).map { it.toString() }
 
-abstract class AbstractOrderBookCommand(val orderManager: OrderManager): TabExecutor {
+abstract class AbstractOrderBookCommand(val plugin: OrderBook): TabExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
 
         if(sender !is Player) {
@@ -40,8 +40,8 @@ abstract class AbstractOrderBookCommand(val orderManager: OrderManager): TabExec
 
     protected fun tabCompleteNumber(partial: String): List<String> = numberTabCompletions.filter { s -> s.startsWith(partial) }
 
-    protected fun tabCompleteID( partial: String): List<String> = orderManager.getOrders()
-        .filter { o -> !o.stage.isCompleted }
-        .map { o -> o.id.toString() }
-        .filter { i -> i.startsWith(partial) }
+    protected fun tabCompleteID( partial: String): List<String>? = plugin.orderManager?.getOrders()
+        ?.filter { o -> !o.stage.isCompleted }
+        ?.map { o -> o.id.toString() }
+        ?.filter { i -> i.startsWith(partial) }
 }

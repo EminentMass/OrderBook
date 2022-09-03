@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.PlayerInventory
 
-class OrderBookRemoveCommand(om: OrderManager) : AbstractIdOrderBookCommand(om) {
+class OrderBookRemoveCommand(plugin: OrderBook) : AbstractIdOrderBookCommand(plugin) {
     override fun onPlayerCommand(
         sender: CommandSender,
         player: Player,
@@ -17,7 +17,7 @@ class OrderBookRemoveCommand(om: OrderManager) : AbstractIdOrderBookCommand(om) 
     ): Boolean {
         val id = parseArgs(args, sender) ?: return true
         val inventory: PlayerInventory = player.inventory
-        val order: Order? = orderManager.getOrder(id)
+        val order: Order? = plugin.orderManager?.getOrder(id)
 
         order ?: run {
             sender.sendMessage("Unable to find order %s", id.toString())
@@ -35,10 +35,9 @@ class OrderBookRemoveCommand(om: OrderManager) : AbstractIdOrderBookCommand(om) 
         }
         inventory takeBookSet order
         inventory giveSellItems order
-        if (!orderManager.removeOrder(id)) {
-            OrderBook.instance!!.logger.warning("Somehow failed to remove order after checking it was there")
-        }
-        logRemove(player.name, order.sellItem, order.buyItem, order.id)
+        plugin.orderManager?.removeOrder(id)
+
+        plugin.logger.logRemove(player.name, order.sellItem, order.buyItem, order.id)
         return true
     }
 }

@@ -1,14 +1,11 @@
 package orderbook.orderbook.commands
 
-import orderbook.orderbook.OrderManager
-import orderbook.orderbook.addBookSet
-import orderbook.orderbook.hasSellItems
-import orderbook.orderbook.takeSellItems
+import orderbook.orderbook.*
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class OrderBookMatchCommand(om: OrderManager) : AbstractIdOrderBookCommand(om) {
+class OrderBookMatchCommand(plugin: OrderBook) : AbstractIdOrderBookCommand(plugin) {
     override fun onPlayerCommand(
         sender: CommandSender,
         player: Player,
@@ -18,7 +15,7 @@ class OrderBookMatchCommand(om: OrderManager) : AbstractIdOrderBookCommand(om) {
     ): Boolean {
         val id = parseArgs(args, sender) ?: return true
         val inventory = player.inventory
-        val order = orderManager.getOrder(id)
+        val order = plugin.orderManager?.getOrder(id)
         order ?: run {
             sender.sendMessage("Unable to find order. It may have already been completed")
             return true
@@ -37,7 +34,7 @@ class OrderBookMatchCommand(om: OrderManager) : AbstractIdOrderBookCommand(om) {
             sender.sendMessage("Unable to create order you do not have the required sell items")
             return true
         }
-        val newMatchOrder = orderManager.postOrder(trade)
+        val newMatchOrder = plugin.orderManager?.postOrder(trade) ?: return false
         inventory takeSellItems trade
         inventory addBookSet newMatchOrder
         sender.sendMessage(newMatchOrder.chatPostDisplay())
