@@ -24,6 +24,8 @@ data class Order(val id: UUID = UUID.randomUUID(), val stage: OrderStage = Order
         return stage.setCompleted()
     }
 
+    infix fun isMatch(other: Order): Boolean = trade.isInverse(other.trade)
+
     fun chatListDisplay(): TextComponent {
         val idText = idDisplay()
 

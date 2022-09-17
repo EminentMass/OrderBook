@@ -55,12 +55,12 @@ class OrderBookListCommand(plugin: OrderBook) : AbstractOrderBookCommand(plugin)
         }
     }
 
-    private fun searchOrders(): List<Component>? = plugin.orderManager?.getActiveOrders()?.map { obj: Order -> obj.chatListDisplay() }
+    private fun searchOrders(): List<Component>? = plugin.orderManager?.getPostedOrders()?.map { obj: Order -> obj.chatListDisplay() }
 
     private fun searchOrders(item: ItemStack): List<Component>? {
         val mat = item.type
         val count = item.amount
-        return plugin.orderManager?.getActiveOrders()
+        return plugin.orderManager?.getPostedOrders()
             ?.filter {o -> o.sellItem.type === mat && o.sellItem.amount >= count }
             ?.map { obj: Order -> obj.chatListDisplay() }
     }
